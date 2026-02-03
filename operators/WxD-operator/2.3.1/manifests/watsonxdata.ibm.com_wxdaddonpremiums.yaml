@@ -1,0 +1,105 @@
+#
+#  IBM CONFIDENTIAL OCO SOURCE MATERIALS COPYRIGHT: 5737-M08
+#  (C) COPYRIGHT IBM CORP. 2023.
+#
+#  The source code for this program is not published or otherwise divested of its trade secrets,
+#  irrespective of what has been deposited with the U.S. Copyright Office.
+#
+
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/instance: ibm-lakehouse
+    app.kubernetes.io/managed-by: ibm-lakehouse
+    app.kubernetes.io/name: ibm-lakehouse
+  name: wxdaddonpremiums.watsonxdata.ibm.com
+spec:
+  group: watsonxdata.ibm.com
+  names:
+    kind: WxdAddonPremium
+    listKind: WxdAddonPremiumList
+    plural: wxdaddonpremiums
+    singular: wxdaddonpremium
+  scope: Namespaced
+  versions:
+    - name: v1
+      additionalPrinterColumns:
+        - description: The version of wxdaddonpremium
+          jsonPath: .spec.version
+          name: Version
+          type: string
+        - description: The size of wxdaddonpremium
+          jsonPath: .spec.scaleConfig
+          name: Size
+          type: string
+        - description: The reconcile status of wxdaddonpremium
+          jsonPath: .status.wxdStatus
+          name: Reconcile
+          type: string
+        - description: A timestamp representing the server time when this object was created
+          jsonPath: .metadata.creationTimestamp
+          name: Age
+          type: date
+      schema:
+        openAPIV3Schema:
+          description: WxdAddonPremium is the Schema for the wxdaddonpremiums API
+          properties:
+            apiVersion:
+              description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources"
+              type: string
+            kind:
+              description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: Spec defines the desired state of WxdAddonPremium
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+              properties:
+                license:
+                  properties:
+                    accept:
+                      type: boolean
+                      default: false
+                    license:
+                      type: string
+                      default: premium
+                  required:
+                    - accept
+                    - license
+                  type: object
+                version:
+                  default: 2.3.1
+                  type: string
+                install_ccs_dependency:
+                  default: false
+                  type: boolean
+                enable_watsonx_platform:
+                  default: true
+                  type: boolean
+                enable_gen_ai:
+                  default: true
+                  type: boolean
+                generate_network_policies:
+                  type: boolean
+              required:
+                - license
+                - version
+            status:
+              description: Status defines the observed state of WxdAddon
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+          type: object
+      served: true
+      storage: true
+      subresources:
+        status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: null
+  storedVersions: null

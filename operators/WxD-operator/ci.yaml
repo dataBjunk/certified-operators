@@ -1,0 +1,34 @@
+#
+#  IBM CONFIDENTIAL OCO SOURCE MATERIALS COPYRIGHT: 5737-M08
+#  (C) COPYRIGHT IBM CORP. 2023.
+#
+#  The source code for this program is not published or otherwise divested of its trade secrets,
+#  irrespective of what has been deposited with the U.S. Copyright Office.
+#
+
+---
+# CI configuration for Red Hat Operator certification
+# Use `replaces-mode` or `semver-mode` for update graph
+updateGraph: replaces-mode
+
+# Certification project ID (to be filled when submitting to Red Hat)
+cert_project_id: "697bcd59509777e1b17a3e9b"
+
+# Reviewers for the operator (optional)
+reviewers:
+  - watsonxdata-team
+
+# Additional certification settings
+certification:
+  # Run preflight checks
+  preflight: true
+  
+  # OpenShift versions to test against
+  openshift_versions:
+    - "4.12"
+    - "4.13"
+    - "4.14"
+    - "4.15"
+    - "4.16"
+
+# Made with Bob

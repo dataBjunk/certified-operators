@@ -1,0 +1,176 @@
+#
+#  IBM CONFIDENTIAL OCO SOURCE MATERIALS COPYRIGHT: 5737-M08
+#  (C) COPYRIGHT IBM CORP. 2023.
+#
+#  The source code for this program is not published or otherwise divested of its trade secrets,
+#  irrespective of what has been deposited with the U.S. Copyright Office.
+#
+
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/instance: ibm-lakehouse
+    app.kubernetes.io/managed-by: ibm-lakehouse
+    app.kubernetes.io/name: ibm-lakehouse
+  name: wxdaddons.watsonxdata.ibm.com
+spec:
+  group: watsonxdata.ibm.com
+  names:
+    kind: WxdAddon
+    listKind: WxdAddonList
+    plural: wxdaddons
+    singular: wxdaddon
+  scope: Namespaced
+  versions:
+    - name: v1
+      additionalPrinterColumns:
+        - description: The version of wxdaddon
+          jsonPath: .spec.version
+          name: Version
+          type: string
+        - description: The size of wxdaddon
+          jsonPath: .spec.scaleConfig
+          name: Size
+          type: string
+        - description: The reconcile status of wxdaddon
+          jsonPath: .status.wxdStatus
+          name: Reconcile
+          type: string
+        - description: A timestamp representing the server time when this object was created
+          jsonPath: .metadata.creationTimestamp
+          name: Age
+          type: date
+      schema:
+        openAPIV3Schema:
+          description: WxdAddon is the Schema for the wxdaddons API
+          properties:
+            apiVersion:
+              description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources"
+              type: string
+            kind:
+              description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: Spec defines the desired state of WxdAddon
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+              properties:
+                license:
+                  properties:
+                    accept:
+                      type: boolean
+                      default: false
+                    license:
+                      type: string
+                      default: standard
+                  required:
+                    - accept
+                    - license
+                  type: object
+                version:
+                  default: 2.3.1
+                  type: string
+                install_ccs_dependency:
+                  default: false
+                  type: boolean
+                enable_multi_catalog_three_part_name:
+                  type: string
+                  enum: ["true", "false"]
+                persistentLogging:
+                  type: object
+                  description: Configuration for persistent log aggregation.
+                  default: {}
+                  properties:
+                    enabled:
+                      type: boolean
+                      default: true
+                      description: Toggle for persistent log aggregation using shared RWX volume.
+                    volumeSize:
+                      type: string
+                      pattern: "^[0-9]+Gi$"
+                      default: "10Gi"
+                      description: Size of the shared log aggregation volume.
+                    schedule:
+                      type: string
+                      default: "0 */2 * * *"
+                      description: "A cron string that determines how frequently log upload cronjobs are run."
+                optimizer:
+                  type: object
+                  description: Query optimizer settings
+                  properties:
+                    privileged:
+                      type: boolean
+                      default: true
+                      description: Whether the optimizer is installed with privileged or unprivileged mode.
+                    namespace:
+                      type: string
+                      description: The optimizer namespace if tethered.
+                    enable_presto_java_support:
+                      type: boolean
+                      description: Whether the optimizer is enabled on presto java engines.
+                    enable_gfs:
+                      type: boolean
+                      description: Whether GFS is enabled.
+                    additionalDnsNames:
+                      type: array
+                      description: Additional DNS names to include in the GFS mTLS certificate.
+                      items:
+                        type: string
+                enable_opensearch:
+                  type: boolean
+                enable_watsonx_platform:
+                  default: false
+                  type: boolean
+                enable_api_v2:
+                  default: false
+                  type: boolean
+                generate_network_policies:
+                  type: boolean
+                modes:
+                  type: object
+                  description: Configuration for deployment modes.
+                  default:
+                    wxd_standard: true
+                    wxd_lite_spark_enabled: false
+                    mds_standalone: false
+                  properties:
+                    wxd_standard:
+                      type: boolean
+                      default: true
+                      description: Enable standard deployment mode with all components.
+                    wxd_lite_spark_enabled:
+                      type: boolean
+                      default: false
+                      description: Enable spark (Analytics Engine) lite mode with minimal components.
+                    mds_standalone:
+                      type: boolean
+                      default: false
+                      description: Enable MDS standalone mode with minimal components.
+                    spark_lite:
+                      type: boolean
+                      description: Deprecated - use wxd_lite_spark_enabled instead. Will be migrated automatically.
+                    standard:
+                      type: boolean
+                      description: Deprecated - use wxd_standard instead. Will be migrated automatically.
+              required:
+                - license
+                - version
+            status:
+              description: Status defines the observed state of WxdAddon
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+          type: object
+      served: true
+      storage: true
+      subresources:
+        status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: null
+  storedVersions: null

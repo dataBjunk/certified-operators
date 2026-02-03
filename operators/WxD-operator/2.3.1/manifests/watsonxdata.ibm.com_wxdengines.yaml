@@ -1,0 +1,171 @@
+#
+#  IBM CONFIDENTIAL OCO SOURCE MATERIALS COPYRIGHT: 5737-M08
+#  (C) COPYRIGHT IBM CORP. 2023.
+#
+#  The source code for this program is not published or otherwise divested of its trade secrets,
+#  irrespective of what has been deposited with the U.S. Copyright Office.
+#
+
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/instance: ibm-lakehouse
+    app.kubernetes.io/managed-by: ibm-lakehouse
+    app.kubernetes.io/name: ibm-lakehouse
+  name: wxdengines.watsonxdata.ibm.com
+spec:
+  group: watsonxdata.ibm.com
+  names:
+    kind: WxdEngine
+    listKind: WxdEngineList
+    plural: wxdengines
+    singular: wxdengine
+  scope: Namespaced
+  versions:
+    - name: v1
+      additionalPrinterColumns:
+        - description: The version of the engine
+          jsonPath: .spec.version
+          name: Version
+          type: string
+        - description: The type of engine
+          jsonPath: .spec.type
+          name: Type
+          type: string
+        - description: The display name of engine
+          jsonPath: .spec.engineDisplayName
+          name: Display Name
+          type: string
+        - description: The size of engine
+          jsonPath: .spec.scaleConfig
+          name: Size
+          type: string
+        - description: The reconcile status of the engine
+          jsonPath: .status.engineStatus
+          name: Reconcile
+          type: string
+        - description: The engine status displayed in the UI
+          jsonPath: .status.middleEndStatus
+          name: Status
+          type: string
+        - description: A timestamp representing the server time when this object was created
+          jsonPath: .metadata.creationTimestamp
+          name: Age
+          type: date
+      schema:
+        openAPIV3Schema:
+          description: WxdEngine is the Schema for the wxdengines API
+          properties:
+            apiVersion:
+              description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources"
+              type: string
+            kind:
+              description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: Spec defines the desired state of WxdEngine
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+              properties:
+                license:
+                  properties:
+                    accept:
+                      type: boolean
+                      default: false
+                    license:
+                      type: string
+                  required:
+                    - accept
+                    - license
+                  type: object
+                version:
+                  default: 2.3.1
+                  type: string
+                pendingRestart:
+                  default: false
+                  type: boolean
+                pendingUpdate:
+                  default: false
+                  type: boolean
+                restartEngineOption:
+                  default: "engine"
+                  type: string
+                milvus_yaml:
+                  type: object
+                  properties:
+                    common:
+                      type: object
+                      properties:
+                        security:
+                          type: object
+                          properties:
+                            rowFilter:
+                              type: object
+                              properties:
+                                enabled:
+                                  type: boolean
+                persistentLogging:
+                  type: object
+                  description: Configuration for persistent log aggregation.
+                  default: {}
+                  properties:
+                    enabled:
+                      type: boolean
+                      default: true
+                      description: Toggle for persistent log aggregation using shared RWX volume.
+                    volumeSize:
+                      type: string
+                      pattern: "^[0-9]+Gi$"
+                      default: "10Gi"
+                      description: Size of the shared log aggregation volume.
+                    schedule:
+                      type: string
+                      default: "0 */2 * * *"
+                      description: "A cron string that determines how frequently log upload cronjobs are run."
+                ssdCache:
+                  type: object
+                  description: Configuration for SSD Cache for Prestissimo workers only
+                  default: {}
+                  properties:
+                    enabled:
+                      type: boolean
+                      default: false
+                      description: Toggle for enabling SSD cache
+                    ssdStorageClassName:
+                      type: string
+                      description: Storage class name for SSD cache
+                    ssdStorageSize:
+                      type: string
+                      pattern: "^[0-9]+Gi$"
+                      default: "5Gi"
+              required:
+                - version
+            status:
+              description: Status defines the observed state of WxdEngine
+              type: object
+              properties:
+                engineStatus:
+                  default: "InProgress"
+                  type: string
+                middleEndStatus:
+                  default: "PROVISIONING"
+                  type: string
+                middleEndStatusCode:
+                  default: "33"
+                  type: string
+              x-kubernetes-preserve-unknown-fields: true
+          type: object
+      served: true
+      storage: true
+      subresources:
+        status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: null
+  storedVersions: null

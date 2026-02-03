@@ -1,0 +1,1286 @@
+#
+#  IBM CONFIDENTIAL OCO SOURCE MATERIALS COPYRIGHT: 5737-M08
+#  (C) COPYRIGHT IBM CORP. 2023.
+#
+#  The source code for this program is not published or otherwise divested of its trade secrets,
+#  irrespective of what has been deposited with the U.S. Copyright Office.
+#
+
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+labels:
+  operatorframework.io/os.linux: supported
+  operatorframework.io/arch.amd64: supported
+  operatorframework.io/arch.s390x: supported
+  operatorframework.io/arch.ppc64le: supported
+metadata:
+  annotations:
+    description: IBM watsonx.data operator
+    operators.operatorframework.io/internal-objects: '["wxdaddons.watsonxdata.ibm.com","wxdengines.watsonxdata.ibm.com","wxds.watsonxdata.ibm.com"]'
+    operators.operatorframework.io/operator-type: "non-standalone"
+    # Red Hat certification annotations
+    categories: "Database,AI/Machine Learning,Big Data"
+    certified: "false"
+    repository: https://github.com/IBM/ibm-open-lakehouse-operator
+    support: IBM
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "watsonxdata.ibm.com/v1",
+          "kind": "Wxd",
+          "metadata": {
+            "labels": {
+              "app.kubernetes.io/created-by": "ibm-lakehouse",
+              "app.kubernetes.io/instance": "lakehouse",
+              "app.kubernetes.io/managed-by": "kustomize",
+              "app.kubernetes.io/name": "wxd",
+              "app.kubernetes.io/part-of": "ibm-lakehouse"
+            },
+            "name": "lakehouse"
+          },
+          "spec": {
+            "blockStorageClass": "standard",
+            "description": "IBM Lakehouse",
+            "shutdown": "false",
+            "version": "2.3.1",
+            "license": {
+              "accept": false
+            }
+          }
+        },
+        {
+          "apiVersion": "watsonxdata.ibm.com/v1",
+          "kind": "WxdAddon",
+          "metadata": {
+            "labels": {
+              "app.kubernetes.io/instance": "wxdAddon",
+              "app.kubernetes.io/managed-by": "ibm-lakehouse",
+              "app.kubernetes.io/name": "wxdAddon"
+            },
+            "name": "wxdaddon"
+          },
+          "spec": {
+            "blockStorageClass": "nfs-client",
+            "shutdown": "false",
+            "license": {
+              "accept": false
+            }
+          }
+        },
+        {
+          "apiVersion": "watsonxdata.ibm.com/v1",
+          "kind": "WxdAddonPremium",
+          "metadata": {
+            "labels": {
+              "app.kubernetes.io/instance": "wxdAddon",
+              "app.kubernetes.io/managed-by": "ibm-lakehouse",
+              "app.kubernetes.io/name": "wxdAddon"
+            },
+            "name": "wxdaddon-premium"
+          },
+          "spec": {
+            "blockStorageClass": "nfs-client",
+            "shutdown": "false",
+            "license": {
+              "accept": false
+            }
+          }
+        },
+        {
+          "apiVersion": "watsonxdata.ibm.com/v1",
+          "kind": "WxdEngine",
+          "metadata": {
+            "labels": {
+              "app.kubernetes.io/created-by": "ibm-lakehouse",
+              "app.kubernetes.io/instance": "wxdengine-sample",
+              "app.kubernetes.io/managed-by": "kustomize",
+              "app.kubernetes.io/name": "wxdengine",
+              "app.kubernetes.io/part-of": "ibm-lakehouse"
+            },
+            "name": "wxdengine-lakehouse-presto-01"
+          },
+          "spec": {
+            "engineDisplayName": "presto-01",
+            "engineName": "presto-01",
+            "lakehouseDeploymentType": "singlenode",
+            "scaleConfig": "small",
+            "shutdown": "false",
+            "type": "presto",
+            "zenServiceInstanceId": 1234,
+            "license": {
+              "accept": false
+            }
+          }
+        }
+      ]
+    capabilities: Seamless Upgrades
+    createdAt: "2023-05-12T21:57:48Z"
+    operators.operatorframework.io/builder: operator-sdk-v1.28.1
+    operators.operatorframework.io/project_layout: ansible.sdk.operatorframework.io/v1
+    nss.operator.ibm.com/managed-operators: ibm-lakehouse
+    containerImage: icr.io/cpopen/ibm-lakehouse-operator@sha256:1e6b4a6bbbf24b9813c60400e652eeee34d9304975e1f67765f545dd47210132
+    olm.skipRange: ">=1.0.0 <6.1.0"
+    operators.openshift.io/infrastructure-features: '["Disconnected"]'
+    # Red Hat OpenShift version compatibility
+    com.redhat.openshift.versions: "v4.12-v4.16"
+    operatorframework.io/suggested-namespace: watsonxdata
+  name: ibm-lakehouse-operator.v6.1.0
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  minKubeVersion: 1.14.6
+  customresourcedefinitions:
+    owned:
+      - description: |-
+          This is the CRD for IBM watsonx.data control plane.
+          License
+          You must read and accept the license terms to install the software(https://ibm.biz/BdpdBF).
+        kind: WxdAddon
+        name: wxdaddons.watsonxdata.ibm.com
+        version: v1
+        specDescriptors:
+          - displayName: License
+            path: license
+            description: You must read and accept the license terms to install the software.
+          - displayName: License type
+            description: "Select the license that you purchased.\nLicense agreement https://ibm.biz/BdpdBF must be accepted during install of this product (required)."
+            path: license.license
+            x-descriptors:
+              - urn:alm:descriptor:com.tectonic.ui:select:Enterprise
+              - urn:alm:descriptor:com.tectonic.ui:select:Standard
+          - displayName: Accept license
+            description: Indicate you read and accept the license.
+            path: license.accept
+            x-descriptors:
+              - urn:alm:descriptor:com.tectonic.ui:checkbox
+      - description: |-
+          This is the CRD for IBM watsonx.data control plane.
+          License
+          You must read and accept the license terms to install the software(https://ibm.biz/BdpdcU).
+        kind: WxdAddonPremium
+        name: wxdaddonpremiums.watsonxdata.ibm.com
+        version: v1
+        specDescriptors:
+          - displayName: License
+            path: license
+            description: You must read and accept the license terms to install the software.
+          - displayName: License type
+            description: "Select the license that you purchased.\nLicense agreement https://ibm.biz/BdpdcU must be accepted during install of this product (required)."
+            path: license.license
+            x-descriptors:
+              - urn:alm:descriptor:com.tectonic.ui:select:Enterprise
+              - urn:alm:descriptor:com.tectonic.ui:select:Standard
+          - displayName: Accept license
+            description: Indicate you read and accept the license.
+            path: license.accept
+            x-descriptors:
+              - urn:alm:descriptor:com.tectonic.ui:checkbox
+      - description: |-
+          This is the CRD for IBM watsonx.data engines.
+          License
+          You must read and accept the license terms to install the software(https://ibm.biz/BdpdBF).
+        kind: WxdEngine
+        name: wxdengines.watsonxdata.ibm.com
+        version: v1
+        specDescriptors:
+          - description: You must read and accept the license terms to install the software.
+            displayName: License
+            path: license
+      - description: |-
+          This is the CRD for IBM watsonx.data instances.
+          License
+          You must read and accept the license terms to install the software(https://ibm.biz/BdpdBF).
+        kind: Wxd
+        name: wxds.watsonxdata.ibm.com
+        version: v1
+        specDescriptors:
+          - displayName: License
+            path: license
+            x-descriptors:
+              - urn:alm:descriptor:com.tectonic.ui:checkbox
+  description: |
+    IBM&reg; watsonx.data is a new open architecture that combines the elements of the data warehouse and data lake models. The best-in-class features and optimizations available on the watsonx.data make it an optimal choice for next generation data analytics and automation.
+
+    # Name
+    IBM&reg; IBM watsonx.data
+
+    # Details
+    watsonx.data is a unique solution that allows co-existence of open source technologies and proprietary products.
+    It offers a single platform where you can store the data or attach data sources for managing and analyzing your enterprise data.
+    Use watsonx.data to store any type of data (structured, semi-structured, and unstructured) and
+    make that data accessible directly for Artificial Intelligence (AI) and Business Intelligence (BI).
+    You can also attach your data sources to watsonx.data, which helps to reduce data duplication and cost of storing data in multiple places.
+    It uses open data formats with APIs and machine learning libraries, making it easier for data scientists and data engineers to use the data.
+    watsonx.data architecture enforces schema and data integrity, making it easier to implement robust data security and governance mechanisms.
+
+    ## Prerequisites
+    1. To install watsonx.data, you must have a client workstation that can connect to the Red Hat&reg; OpenShift&reg; Container Platform cluster.
+    2. To be able to run ib-lh-manage commands in a restricting environment
+    3. Set up persistent storage
+    4. Set up project on Red Hat&reg; OpenShift&reg; Container Platform cluster.
+    5. Update global image pull secret
+    6. Mirror image to a private container registry
+
+    ## Resources Required
+
+    Various Resources Required
+
+    ## Installing
+    For instructions to install IBM&reg; watsonx.data 2.3.1, contact your local sales representative.
+    One of our technical team members will guide you through the installation process.
+
+    ## Configuration
+      N/A
+    ### Limitations
+    1. When dealing with character data, case sensitivity can be important when searching for specific matches or patterns.
+    However, not all databases and query engines behave in the same way.
+    Some are case insensitive by default, while others are not.
+    This can lead to unexpected results if the case of the data is not taken into account.
+
+    ### SecurityContextConstraints Requirements
+    IBM&reg; watsonx.data supports several different mechanisms for securing your environment and your data.
+    FIPS can also be enabled.
+
+  displayName: IBM watsonx.data
+  icon:
+    - base64data: PHN2ZyBpZD0id2F0c29ueC5kYXRhIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMzIgMzIiPgogIDxkZWZzPgogICAgPHN0eWxlPgogICAgICAuc3RvcDEgewogICAgICAgIHN0b3AtY29sb3I6ICMwOGJkYmE7CiAgICAgIH0KCiAgICAgIC5zdG9wMiB7CiAgICAgICAgc3RvcC1jb2xvcjogIzBmNjJmZTsKICAgICAgfQoKICAgICAgLndhdmVzIHsKICAgICAgICBmaWxsOiAjMDAxZDZjOwogICAgICB9CgogICAgICBAbWVkaWEgKHByZWZlcnMtY29sb3Itc2NoZW1lOiBkYXJrKSB7CiAgICAgICAgLnN0b3AxIHsKICAgICAgICAgIHN0b3AtY29sb3I6ICMzZGRiZDk7CiAgICAgICAgfQoKICAgICAgICAuc3RvcDIgewogICAgICAgICAgc3RvcC1jb2xvcjogIzQ1ODlmZjsKICAgICAgICB9CgogICAgICAgIC53YXZlcyB7CiAgICAgICAgICBmaWxsOiAjZjRmNGY0OwogICAgICAgIH0KICAgICAgfQogICAgPC9zdHlsZT4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iNjc4cGowdnV5YSIgeDE9IjQuMTI1IiB5MT0iMjIuMzMiIHgyPSI0LjEyNSIgeTI9IjEzIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CiAgICAgIDxzdG9wIG9mZnNldD0iLjIiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9IjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImU1aDR1djUwamIiIHgxPSItMjg5Mi41MTgiIHkxPSItMTgzOS44MjUiIHgyPSItMjg5Mi41MTgiIHkyPSItMTg0Ny4yMjQiIGdyYWRpZW50VHJhbnNmb3JtPSJtYXRyaXgoLjY5NSAwIDAgLjkxNCAyMDIwLjAwMyAxNzA5LjgzKSIgeGxpbms6aHJlZj0iIzY3OHBqMHZ1eWEiLz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ibHBzZWt2YTQ4ZCIgeDE9IjAiIHkxPSIzMiIgeDI9IjMyIiB5Mj0iMCIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgogICAgICA8c3RvcCBvZmZzZXQ9Ii4xIiBzdG9wLWNvbG9yPSIjM2RkYmQ5Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iLjkiIHN0b3AtY29sb3I9IiM0NTg5ZmYiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bWFzayBpZD0ieDYweTJpZjQ5YyIgeD0iMCIgeT0iMCIgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHBhdGggZD0iTTI5LjAwOSA5Ljk5NHYxMWgtMnYtMTAuNDJsLTExLTYuNDItMTEgNi40MnYxMS40NWgtMlY5Ljk5NGExIDEgMCAwIDEgLjUtLjg2bDEyLTdjLjE1LS4wOS4zMy0uMTQuNS0uMTRzLjM1LjA1LjUuMTRsMTIgN2ExIDEgMCAwIDEgLjUuODZ6IiBzdHlsZT0iZmlsbDojZmZmIi8+CiAgICAgIDxwYXRoIHN0eWxlPSJmaWxsOnVybCgjNjc4cGowdnV5YSkiIGQ9Ik0yLjI1IDEzaDMuNzQ5djkuMzNIMi4yNXoiLz4KICAgICAgPHBhdGggZD0iTTMuMDI2IDI1LjAwNHYtMmE2Ljk5NyA2Ljk5NyAwIDAgMCA2LjA4OS0zLjU2MWwxLjc0Mi45ODFhOSA5IDAgMCAxLTcuODMxIDQuNTc5ek00LjA2NiAyOS45OTRoLTEuMDZ2LTJoMS4wNmMyLjk4NiAwIDUuNzc5LTEuMTc1IDcuODY1LTMuMzA5bDEuNDMgMS4zOTdhMTIuODk4IDEyLjg5OCAwIDAgMS05LjI5NSAzLjkxMnoiIHN0eWxlPSJmaWxsOiNmZmYiLz4KICAgICAgPHBhdGggdHJhbnNmb3JtPSJyb3RhdGUoLTExMi4yNjYgOS4wMjcgMjQuMzEzKSIgc3R5bGU9ImZpbGw6dXJsKCNlNWg0dXY1MGpiKSIgZD0iTTMuNTcxIDIwLjkzMWgxMC45MTN2Ni43NjRIMy41NzF6Ii8+CiAgICAgIDxwYXRoIHN0eWxlPSJmaWxsOiNmZmYiIGQ9Ik04LjAxOCAxMmgydjJoLTJ6TTIwLjAxOCAxNmgydjJoLTJ6TTE1LjAxMyA5aDJ2MmgtMnpNMTMuMDI4IDE0aDJ2MmgtMnpNMjIuMDI4IDEyaDJ2MmgtMnoiLz4KICAgIDwvbWFzaz4KICA8L2RlZnM+CiAgPGcgc3R5bGU9Im1hc2s6dXJsKCN4NjB5MmlmNDljKSI+CiAgICA8cGF0aCBzdHlsZT0iZmlsbDp1cmwoI2xwc2VrdmE0OGQpIiBkPSJNMCAwaDMydjMySDB6Ii8+CiAgPC9nPgogIDxwYXRoIGNsYXNzPSJ3YXZlcyIgZD0iTTI1LjAyOCAyNS4wMDRoLTEuMjUyYy00LjEzOCAwLTguNzQ4LTIuODc2LTguNzQ4LTcuMDA0aDJjMCAyLjgxOCAzLjYyOCA1LjAwNCA2Ljc0OCA1LjAwNGgxLjI1MnYyeiIgLz4KICA8cGF0aCBjbGFzcz0id2F2ZXMiIGQ9Ik0yNS4wMjggMjkuOTk0aC0yLjA1MmMtNy4wMjQgMC0xMi45NTktNS40OTUtMTIuOTU5LTExLjk5OGgyYzAgNS40MTkgNS4wMTkgOS45OTggMTAuOTU5IDkuOTk4aDIuMDUydjJ6TTI3LjAzOSAyMi45OTloMnYyaC0yek0yNy4wMTkgMjcuOTk5aDJ2MmgtMnoiIC8+Cjwvc3ZnPg==
+      mediatype: image/svg+xml
+  install:
+    spec:
+      deployments:
+        - label:
+            app.kubernetes.io/component: manager
+            app.kubernetes.io/created-by: ibm-lakehouse
+            app.kubernetes.io/instance: ibm-lakehouse
+            app.kubernetes.io/managed-by: ibm-lakehouse
+            app.kubernetes.io/name: ibm-lakehouse
+            app.kubernetes.io/part-of: ibm-lakehouse
+            control-plane: controller-manager
+            icpdsupport/addOnId: ibm-lakehouse
+            icpdsupport/app: operator
+            icpdsupport/module: operator
+          name: ibm-lakehouse-controller-manager
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                control-plane: controller-manager
+            strategy: {}
+            template:
+              metadata:
+                annotations:
+                  cloudpakId: a30579a0e5214cfaa0224c6043b37ea4
+                  cloudpakName: IBM watsonx.data
+                  productID: 9e2a4571085f42f8af674f707fab0b75
+                  productMetric: FREE
+                  productName: IBM watsonx.data
+                  productVersion: 6.1.0
+                labels:
+                  app.kubernetes.io/component: ibm-lakehouse
+                  app.kubernetes.io/instance: ibm-lakehouse
+                  app.kubernetes.io/managed-by: ibm-lakehouse
+                  app.kubernetes.io/name: ibm-lakehouse
+                  control-plane: controller-manager
+                  icpdsupport/addOnId: ibm-lakehouse
+                  icpdsupport/app: operator
+                  icpdsupport/module: operator
+                  intent: projected
+              spec:
+                affinity:
+                  nodeAffinity:
+                    preferredDuringSchedulingIgnoredDuringExecution:
+                      - preference:
+                          matchExpressions:
+                            - key: kubernetes.io/arch
+                              operator: In
+                              values:
+                                - amd64
+                                - ppc64le
+                                - s390x
+                        weight: 3
+                    requiredDuringSchedulingIgnoredDuringExecution:
+                      nodeSelectorTerms:
+                        - matchExpressions:
+                            - key: kubernetes.io/arch
+                              operator: In
+                              values:
+                                - amd64
+                                - arm64
+                                - ppc64le
+                                - s390x
+                            - key: kubernetes.io/os
+                              operator: In
+                              values:
+                                - linux
+                containers:
+                  - args:
+                      - --health-probe-bind-address=:6789
+                      - --metrics-bind-address=127.0.0.1:8080
+                      # Go logging
+                      - --zap-log-level
+                      - error
+                      - --zap-stacktrace-level
+                      - error
+                      - --zap-encoder
+                      - console
+                      # Ansible logging
+                      - "--ansible-verbosity"
+                      - "1"
+                      - --ansible-log-events=Everything
+                    env:
+                      - name: ANSIBLE_DEBUG_LOGS
+                        value: "False"
+                      - name: ANSIBLE_STDOUT_CALLBACK
+                        value: "default"
+                      - name: ANSIBLE_CALLBACK_RESULT_FORMAT
+                        value: "yaml"
+                      - name: ANSIBLE_GATHERING
+                        value: explicit
+                      - name: OPERATOR_NAMESPACE
+                        valueFrom:
+                          fieldRef:
+                            fieldPath: metadata.namespace
+                      - name: WATCH_NAMESPACE
+                        valueFrom:
+                          configMapKeyRef:
+                            name: namespace-scope
+                            key: namespaces
+                            optional: true
+                      - name: MAX_CONCURRENT_RECONCILES_WXD_WATSONXDATA_IBM_COM
+                        value: "1"
+                      - name: MAX_CONCURRENT_RECONCILES_WXDADDON_WATSONXDATA_IBM_COM
+                        value: "1"
+                      - name: MAX_CONCURRENT_RECONCILES_WXDENGINE_WATSONXDATA_IBM_COM
+                        value: "3"
+                      - name: ANSIBLE_FORKS
+                        value: "5"
+                    image: icr.io/cpopen/ibm-lakehouse-operator@sha256:1e6b4a6bbbf24b9813c60400e652eeee34d9304975e1f67765f545dd47210132
+                    livenessProbe:
+                      httpGet:
+                        path: /healthz
+                        port: 6789
+                      initialDelaySeconds: 15
+                      periodSeconds: 20
+                    name: manager
+                    readinessProbe:
+                      httpGet:
+                        path: /readyz
+                        port: 6789
+                      initialDelaySeconds: 5
+                      periodSeconds: 10
+                    resources:
+                      limits:
+                        cpu: 1
+                        memory: 1G
+                      requests:
+                        cpu: 10m
+                        memory: 256Mi
+                    securityContext:
+                      allowPrivilegeEscalation: false
+                      capabilities:
+                        drop:
+                          - ALL
+                      privileged: false
+                      readOnlyRootFilesystem: false
+                      runAsNonRoot: true
+                securityContext:
+                  runAsNonRoot: true
+                serviceAccount: ibm-lakehouse-operator-sa
+                serviceAccountName: ibm-lakehouse-operator-sa
+                terminationGracePeriodSeconds: 10
+      permissions:
+        - rules:
+            - apiGroups:
+                - ""
+              resources:
+                - secrets
+                - serviceaccounts
+              verbs:
+                - create
+                - delete
+                - deletecollection
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - ""
+              resources:
+                - namespaces
+              verbs:
+                - get
+            - apiGroups:
+                - ""
+                - project.openshift.io
+              resources:
+                - projects
+              verbs:
+                - get
+            - apiGroups:
+                - ""
+              resources:
+                - pods/attach
+                - pods/exec
+                - pods/portforward
+                - pods/proxy
+                - secrets
+                - services/proxy
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - ""
+              resources:
+                - serviceaccounts
+              verbs:
+                - get
+            - apiGroups:
+                - ""
+              resources:
+                - pods
+                - pods/attach
+                - pods/exec
+                - pods/portforward
+                - pods/proxy
+              verbs:
+                - create
+                - delete
+                - deletecollection
+                - patch
+                - update
+            - apiGroups:
+                - ""
+              resources:
+                - configmaps
+                - endpoints
+                - persistentvolumeclaims
+                - replicationcontrollers
+                - replicationcontrollers/scale
+                - secrets
+                - serviceaccounts
+                - services
+                - services/proxy
+              verbs:
+                - create
+                - delete
+                - deletecollection
+                - patch
+                - update
+            - apiGroups:
+                - apps
+              resources:
+                - deployments
+                - deployments/rollback
+                - deployments/scale
+                - replicasets
+                - replicasets/scale
+                - statefulsets
+                - statefulsets/scale
+              verbs:
+                - create
+                - delete
+                - deletecollection
+                - patch
+                - update
+            - apiGroups:
+                - autoscaling
+              resources:
+                - horizontalpodautoscalers
+              verbs:
+                - create
+                - delete
+                - deletecollection
+                - patch
+                - update
+            - apiGroups:
+                - batch
+              resources:
+                - cronjobs
+                - jobs
+              verbs:
+                - create
+                - delete
+                - deletecollection
+                - patch
+                - update
+            - apiGroups:
+                - extensions
+              resources:
+                - deployments
+                - deployments/rollback
+                - deployments/scale
+                - ingresses
+                - networkpolicies
+                - replicasets
+                - replicasets/scale
+                - replicationcontrollers/scale
+              verbs:
+                - create
+                - delete
+                - deletecollection
+                - patch
+                - update
+            - apiGroups:
+                - policy
+              resources:
+                - poddisruptionbudgets
+              verbs:
+                - create
+                - delete
+                - deletecollection
+                - patch
+                - update
+            - apiGroups:
+                - networking.k8s.io
+              resources:
+                - ingresses
+                - networkpolicies
+              verbs:
+                - create
+                - delete
+                - deletecollection
+                - patch
+                - update
+            - apiGroups:
+                - metrics.k8s.io
+              resources:
+                - pods
+                - nodes
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - snapshot.storage.k8s.io
+              resources:
+                - volumesnapshots
+              verbs:
+                - get
+                - list
+                - watch
+                - create
+                - update
+                - patch
+                - delete
+                - deletecollection
+            - apiGroups:
+                - ""
+                - apps.openshift.io
+              resources:
+                - deploymentconfigs
+                - deploymentconfigs/scale
+              verbs:
+                - create
+                - delete
+                - deletecollection
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - ""
+                - apps.openshift.io
+              resources:
+                - deploymentconfigrollbacks
+                - deploymentconfigs/instantiate
+                - deploymentconfigs/rollback
+              verbs:
+                - create
+            - apiGroups:
+                - ""
+                - apps.openshift.io
+              resources:
+                - deploymentconfigs/log
+                - deploymentconfigs/status
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - ""
+                - route.openshift.io
+              resources:
+                - routes
+              verbs:
+                - create
+                - delete
+                - deletecollection
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - ""
+                - route.openshift.io
+              resources:
+                - routes/custom-host
+              verbs:
+                - create
+            - apiGroups:
+                - ""
+                - route.openshift.io
+              resources:
+                - routes/status
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - ""
+                - template.openshift.io
+              resources:
+                - processedtemplates
+                - templateconfigs
+                - templateinstances
+                - templates
+              verbs:
+                - create
+                - delete
+                - deletecollection
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - networking.k8s.io
+              resources:
+                - networkpolicies
+              verbs:
+                - create
+                - delete
+                - deletecollection
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - packages.operators.coreos.com
+              resources:
+                - packagemanifests
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - ""
+              resources:
+                - configmaps
+                - endpoints
+                - persistentvolumeclaims
+                - persistentvolumeclaims/status
+                - pods
+                - replicationcontrollers
+                - replicationcontrollers/scale
+                - serviceaccounts
+                - services
+                - services/status
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - ""
+              resources:
+                - bindings
+                - events
+                - namespaces/status
+                - pods/log
+                - pods/status
+                - replicationcontrollers/status
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - ""
+              resources:
+                - namespaces
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - apps
+              resources:
+                - controllerrevisions
+                - deployments
+                - deployments/scale
+                - deployments/status
+                - replicasets
+                - replicasets/scale
+                - replicasets/status
+                - statefulsets
+                - statefulsets/scale
+                - statefulsets/status
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - autoscaling
+              resources:
+                - horizontalpodautoscalers
+                - horizontalpodautoscalers/status
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - batch
+              resources:
+                - cronjobs
+                - cronjobs/status
+                - jobs
+                - jobs/status
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - extensions
+              resources:
+                - deployments
+                - deployments/scale
+                - deployments/status
+                - ingresses
+                - ingresses/status
+                - networkpolicies
+                - replicasets
+                - replicasets/scale
+                - replicasets/status
+                - replicationcontrollers/scale
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - policy
+              resources:
+                - poddisruptionbudgets
+                - poddisruptionbudgets/status
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - networking.k8s.io
+              resources:
+                - ingresses
+                - ingresses/status
+                - networkpolicies
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - snapshot.storage.k8s.io
+              resources:
+                - volumesnapshots
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - ""
+                - apps.openshift.io
+              resources:
+                - deploymentconfigs
+                - deploymentconfigs/scale
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - ""
+                - route.openshift.io
+              resources:
+                - routes
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - ""
+                - template.openshift.io
+              resources:
+                - processedtemplates
+                - templateconfigs
+                - templateinstances
+                - templates
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - ""
+                - authorization.openshift.io
+              resources:
+                - rolebindings
+                - roles
+              verbs:
+                - create
+                - delete
+                - deletecollection
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - rbac.authorization.k8s.io
+              resources:
+                - rolebindings
+                - roles
+              verbs:
+                - create
+                - delete
+                - deletecollection
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - ""
+                - authorization.openshift.io
+              resources:
+                - localresourceaccessreviews
+                - localsubjectaccessreviews
+                - subjectrulesreviews
+              verbs:
+                - create
+            - apiGroups:
+                - authorization.k8s.io
+              resources:
+                - localsubjectaccessreviews
+              verbs:
+                - create
+            - apiGroups:
+                - ""
+                - project.openshift.io
+              resources:
+                - projects
+              verbs:
+                - get
+            - apiGroups:
+                - ""
+                - authorization.openshift.io
+              resources:
+                - resourceaccessreviews
+                - subjectaccessreviews
+              verbs:
+                - create
+            - apiGroups:
+                - ""
+                - security.openshift.io
+              resources:
+                - podsecuritypolicyreviews
+                - podsecuritypolicyselfsubjectreviews
+                - podsecuritypolicysubjectreviews
+              verbs:
+                - create
+            - apiGroups:
+                - ""
+                - authorization.openshift.io
+              resources:
+                - rolebindingrestrictions
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - ""
+                - project.openshift.io
+              resources:
+                - projects
+              verbs:
+                - get
+            - apiGroups:
+                - ""
+                - route.openshift.io
+              resources:
+                - routes/status
+              verbs:
+                - update
+            - apiGroups:
+                - ""
+              resources:
+                - events
+              verbs:
+                - create
+            - apiGroups:
+                - coordination.k8s.io
+              resources:
+                - leases
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - update
+            - apiGroups:
+                - zen.cpd.ibm.com
+              resources:
+                - zenextension
+                - zenextensions
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - zen.cpd.ibm.com
+              resources:
+                - zenextension/status
+              verbs:
+                - get
+            - apiGroups:
+                - zen.cpd.ibm.com
+              resources:
+                - zenservices
+              verbs:
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - watsonxdata.ibm.com
+              resources:
+                - wxds
+                - wxds/status
+                - wxds/finalizers
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - watsonxdata.ibm.com
+              resources:
+                - wxdaddons
+                - wxdaddons/status
+                - wxdaddons/finalizers
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - watsonxdata.ibm.com
+              resources:
+                - wxdaddonpremiums
+                - wxdaddonpremiums/status
+                - wxdaddonpremiums/finalizers
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - watsonxdata.ibm.com
+              resources:
+                - wxdengines
+                - wxdengines/status
+                - wxdengines/finalizers
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - postgresql.k8s.enterprisedb.io
+              resources:
+                - clusters
+                - backups
+              verbs:
+                - get
+                - apply
+                - create
+                - delete
+                - update
+                - edit
+                - patch
+                - list
+                - watch
+            - apiGroups:
+                - cert-manager.io
+              resources:
+                - certificates
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - operator.ibm.com
+              resources:
+                - ibmlicensingdefinitions
+              verbs:
+                - create
+                - get
+                - list
+                - watch
+                - patch
+                - update
+                - delete
+            - apiGroups:
+                - zen.cpd.ibm.com
+              resources:
+                - zenservice
+                - zenservices/status
+                - zenservice/status
+              verbs:
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - db2u.databases.ibm.com
+              resources:
+                - db2uinstances
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - db2u.databases.ibm.com
+              resources:
+                - db2uinstances/status
+              verbs:
+                - get
+            - apiGroups:
+                - ae.cpd.ibm.com
+              resources:
+                - analyticsengine
+                - analyticsengines
+                - analyticsengine/status
+                - analyticsengines/status
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - ccs.cpd.ibm.com
+              resources:
+                - ccs
+                - ccs/status
+                - ccs/finalizers
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - elasticsearch.opencontent.ibm.com
+              resources:
+                - elasticsearchclusters
+                - elasticsearchclusters/spec
+                - elasticsearchclusters/status
+                - elasticsearchclusters/finalizers
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - datarefinery.cpd.ibm.com
+              resources:
+                - datarefinery
+                - datarefinery/spec
+                - datarefinery/status
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - wml.cpd.ibm.com
+              resources:
+                - wmlbase
+                - wmlbases
+                - wmlbase/spec
+                - wmlbase/status
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - ikc.cpd.ibm.com
+              resources:
+                - ikcstandard
+                - ikcstandard/spec
+                - ikcstandard/status
+                - ikcpremium
+                - ikcpremium/spec
+                - ikcpremium/status
+                - semanticautomation
+                - semanticautomation/spec
+                - semanticautomation/status
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - ws.cpd.ibm.com
+              resources:
+                - ws
+                - ws/spec
+                - ws/status
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - cpd.ibm.com
+              resources:
+                - datasift
+                - datasift/status
+                - datasift/finalizers
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - watsonxaiifm.cpd.ibm.com
+              resources:
+                - watsonxaiifm
+                - watsonxaiifm/spec
+                - watsonxaiifm/status
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - cpd.ibm.com
+              resources:
+                - watsonxdataintelligence
+                - watsonxdataintelligence/status
+                - watsonxdataintelligence/finalizers
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - missioncontrol.datastax.com
+              resources:
+                - missioncontrolclusters
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - missioncontrol.datastax.com
+              resources:
+                - missioncontrolclusters/finalizers
+              verbs:
+                - update
+            - apiGroups:
+                - missioncontrol.datastax.com
+              resources:
+                - missioncontrolclusters/status
+              verbs:
+                - get
+                - patch
+                - update
+          serviceAccountName: ibm-lakehouse-operator-sa
+    strategy: deployment
+  installModes:
+    - supported: true
+      type: OwnNamespace
+    - supported: false
+      type: SingleNamespace
+    - supported: false
+      type: MultiNamespace
+    - supported: true
+      type: AllNamespaces
+  keywords:
+    - database
+    - hive
+    - prestodb
+    - watsonx
+    - lakehouse
+    - data warehouse
+    - analytics
+  links:
+    - name: IBM watsonx.data
+      url: https://www.ibm.com/products/watsonx-data
+    - name: Documentation
+      url: https://www.ibm.com/docs/en/watsonxdata
+    - name: Source Code
+      url: https://github.com/IBM/ibm-open-lakehouse-operator
+  maintainers:
+    - name: IBM watsonx.data Team
+      email: watsonxdata@ibm.com
+  maturity: stable
+  provider:
+    name: IBM
+  version: 6.1.0

@@ -1,0 +1,203 @@
+#
+#  IBM CONFIDENTIAL OCO SOURCE MATERIALS COPYRIGHT: 5737-M08
+#  (C) COPYRIGHT IBM CORP. 2023.
+#
+#  The source code for this program is not published or otherwise divested of its trade secrets,
+#  irrespective of what has been deposited with the U.S. Copyright Office.
+#
+
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/instance: ibm-lakehouse
+    app.kubernetes.io/managed-by: ibm-lakehouse
+    app.kubernetes.io/name: ibm-lakehouse
+  name: wxds.watsonxdata.ibm.com
+spec:
+  group: watsonxdata.ibm.com
+  names:
+    kind: Wxd
+    listKind: WxdList
+    plural: wxds
+    singular: wxd
+  scope: Namespaced
+  versions:
+    - name: v1
+      additionalPrinterColumns:
+        - description: The version of wxd
+          jsonPath: .spec.version
+          name: Version
+          type: string
+        - description: The size of wxd
+          jsonPath: .spec.scaleConfig
+          name: Size
+          type: string
+        - description: The status of wxd
+          jsonPath: .status.wxdInstanceStatus
+          name: Reconcile
+          type: string
+        - description: The status of opentelemetry
+          jsonPath: .status.otel_collector
+          name: OpenTelemetry
+          type: string
+        - description: A timestamp representing the server time when this object was created
+          jsonPath: .metadata.creationTimestamp
+          name: Age
+          type: date
+      schema:
+        openAPIV3Schema:
+          description: wxd is the Schema for the wxds API
+          properties:
+            apiVersion:
+              description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources"
+              type: string
+            kind:
+              description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: Spec defines the desired state of wxd
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+              properties:
+                license:
+                  properties:
+                    accept:
+                      type: boolean
+                      default: false
+                    license:
+                      type: string
+                  required:
+                    - accept
+                    - license
+                  type: object
+                version:
+                  default: 2.3.1
+                  type: string
+                enable_cpg:
+                  type: boolean
+                qhmmEnabled:
+                  default: true
+                  type: boolean
+                enable_opentelemetry_collector:
+                  default: false
+                  type: boolean
+                update_configuration:
+                  default: false
+                  type: boolean
+                guardium_enabled:
+                  type: boolean
+                guardium_event_kafka_topic:
+                  type: string
+                kafka_brokers:
+                  type: string
+                otel_configuration:
+                  type: object
+                  default: {}
+                  properties:
+                    collector_properties:
+                      type: object
+                      default: {}
+                      properties:
+                        instana_endpoint:
+                          type: string
+                          default: ""
+                        x_instana_host:
+                          type: string
+                          default: ""
+                        instana_tls:
+                          type: boolean
+                          default: false
+                        prometheus_endpoint:
+                          type: string
+                          default: ""
+                        prometheus_tls:
+                          type: boolean
+                          default: false
+                        traces_exporters:
+                          default: []
+                          items:
+                            type: string
+                          type: array
+                        traces_receivers:
+                          default: []
+                          items:
+                            type: string
+                          type: array
+                        metrics_exporters:
+                          default: []
+                          items:
+                            type: string
+                          type: array
+                        metrics_receivers:
+                          default: []
+                          items:
+                            type: string
+                          type: array
+                    milvus_properties:
+                      type: object
+                      default: {}
+                      properties:
+                        trace_exporter:
+                          type: string
+                          default: "stdout"
+                        trace_sample_fraction:
+                          type: number
+                          default: 0
+                    event_listener_properties:
+                      type: object
+                      default: {}
+                      properties:
+                        tracing-enabled:
+                          default: false
+                          type: boolean
+                        max-exporter-batch-size:
+                          type: integer
+                          default: 256
+                        max-queue-size:
+                          type: integer
+                          default: 1024
+                        schedule-delay:
+                          type: integer
+                          default: 1000
+                        exporter-timeout:
+                          type: integer
+                          default: 1024
+                persistentLogging:
+                  type: object
+                  description: Configuration for persistent log aggregation.
+                  default: {}
+                  properties:
+                    enabled:
+                      type: boolean
+                      default: true
+                      description: Toggle for persistent log aggregation using shared RWX volume.
+                    volumeSize:
+                      type: string
+                      pattern: "^[0-9]+Gi$"
+                      default: "10Gi"
+                      description: Size of the shared log aggregation volume.
+                    schedule:
+                      type: string
+                      default: "0 */2 * * *"
+                      description: "A cron string that determines how frequently log upload cronjobs are run."
+              required:
+                - version
+            status:
+              description: Status defines the observed state of wxd
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+          type: object
+      served: true
+      storage: true
+      subresources:
+        status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: null
+  storedVersions: null
