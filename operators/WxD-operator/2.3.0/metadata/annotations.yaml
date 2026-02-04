@@ -23,7 +23,7 @@ annotations:
   operators.operatorframework.io.test.config.v1: tests/scorecard/
 
   # Red Hat certification annotations
-  com.redhat.openshift.versions: "v4.12-v4.16"
+  com.redhat.openshift.versions: "v4.12-v4.20"
   operators.operatorframework.io/operator-type: "non-standalone"
   
   # Red Hat delivery annotations
