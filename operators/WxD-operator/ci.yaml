@@ -6,29 +6,188 @@
 #  irrespective of what has been deposited with the U.S. Copyright Office.
 #
 
----
-# CI configuration for Red Hat Operator certification
-# Use `replaces-mode` or `semver-mode` for update graph
-updateGraph: replaces-mode
+# Red Hat Operator Certification CI Configuration
+# This file configures the certification pipeline for Red Hat OpenShift
 
-# Certification project ID (to be filled when submitting to Red Hat)
-cert_project_id: "697bcd59509777e1b17a3e9b"
+# Certification project information
+cert_project_id: "697bcd59509777e1b17a3e9b"  # Replace with your Red Hat Connect project ID
 
-# Reviewers for the operator (optional)
-reviewers:
-  - watsonxdata-team
+# Operator metadata
+name: ibm-lakehouse-operator
+version: 6.0.0
+package: ibm-lakehouse-operator
 
-# Additional certification settings
+# OpenShift version compatibility
+openshift_versions:
+  - "4.12"
+  - "4.13"
+  - "4.14"
+  - "4.15"
+  - "4.16"
+  - "4.18"
+  - "4.20"
+
+# Certification requirements
 certification:
-  # Run preflight checks
-  preflight: true
+  # Operator bundle validation
+  bundle_validation: true
   
-  # OpenShift versions to test against
-  openshift_versions:
-    - "4.12"
-    - "4.13"
-    - "4.14"
-    - "4.15"
-    - "4.16"
+  # Security scanning
+  security_scan: true
+  
+  # Scorecard tests
+  scorecard:
+    enabled: true
+    tests:
+      - basic-check-spec
+      - olm-bundle-validation
+      - olm-crds-have-validation
+      - olm-crds-have-resources
+      - olm-spec-descriptors
+      - olm-status-descriptors
+  
+  # Preflight checks
+  preflight:
+    enabled: true
+    checks:
+      - HasLicense
+      - HasUniqueTag
+      - LayerCountAcceptable
+      - HasNoProhibitedPackages
+      - HasRequiredLabel
+      - RunAsNonRoot
+      - HasModifiedFiles
+      - BasedOnUbi
+  
+  # Container image requirements
+  images:
+    base_image: "registry.access.redhat.com/ubi9/ubi-minimal:latest"
+    scan_required: true
+    
+  # Disconnected/air-gapped support
+  disconnected_support: true
+  
+  # Multi-architecture support
+  architectures:
+    - amd64
+    - ppc64le
+    - s390x
+
+# Testing configuration
+testing:
+  # Operator deployment test
+  deployment_test: true
+  
+  # Custom resource creation test
+  cr_test: true
+  
+  # Upgrade test
+  upgrade_test: true
+  
+  # Uninstall test
+  uninstall_test: true
+
+# Build configuration
+build:
+  # Operator image
+  operator_image: "icr.io/cpopen/ibm-lakehouse-operator:6.0.0"
+  
+  # Bundle image
+  bundle_image: "icr.io/cpopen/ibm-lakehouse-operator-bundle:6.0.0"
+  
+  # Catalog image
+  catalog_image: "icr.io/cpopen/ibm-lakehouse-operator-catalog:6.0.0"
+
+# Red Hat Connect portal integration
+connect:
+  # Auto-publish to Red Hat Ecosystem Catalog
+  auto_publish: false
+  
+  # Certification level
+  certification_level: "certified"
+  
+  # Support information
+  support:
+    vendor: "IBM"
+    url: "https://www.ibm.com/support"
+    email: "watsonx-data-support@ibm.com"
+
+# Documentation links
+documentation:
+  product_docs: "https://www.ibm.com/docs/en/watsonx/watsonxdata"
+  operator_guide: "https://github.com/IBM/ibm-open-lakehouse-operator/blob/main/README.md"
+  api_reference: "https://github.com/IBM/ibm-open-lakehouse-operator/blob/main/docs/api.md"
+
+# Compliance and security
+compliance:
+  # FIPS compliance
+  fips_enabled: false
+  
+  # Security context constraints
+  scc_required: "restricted"
+  
+  # Network policies
+  network_policies_enabled: true
+  
+  # Pod security standards
+  pod_security_standard: "restricted"
+
+# Monitoring and observability
+observability:
+  # Prometheus metrics
+  metrics_enabled: true
+  metrics_port: 8080
+  
+  # Health checks
+  health_checks:
+    liveness_probe: true
+    readiness_probe: true
+
+# Resource requirements
+resources:
+  operator:
+    requests:
+      cpu: "10m"
+      memory: "256Mi"
+    limits:
+      cpu: "1"
+      memory: "1Gi"
+
+# Operator capabilities
+capabilities:
+  level: "Seamless Upgrades"
+  features:
+    - "Lifecycle management"
+    - "Seamless upgrades"
+    - "Backup and restore"
+    - "Monitoring and metrics"
+    - "Auto-scaling"
+
+# Installation modes
+install_modes:
+  own_namespace: true
+  single_namespace: false
+  multi_namespace: false
+  all_namespaces: true
+
+# Operator maturity
+maturity: "stable"
+
+# Categories
+categories:
+  - "Database"
+  - "AI/Machine Learning"
+  - "Big Data"
+
+# Keywords for searchability
+keywords:
+  - "database"
+  - "lakehouse"
+  - "analytics"
+  - "watsonx"
+  - "hive"
+  - "presto"
+  - "data warehouse"
+  - "data lake"
 
 # Made with Bob

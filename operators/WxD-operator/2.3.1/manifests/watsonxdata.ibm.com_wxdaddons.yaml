@@ -72,7 +72,7 @@ spec:
                     - license
                   type: object
                 version:
-                  default: 2.3.1
+                  default: 2.3.0
                   type: string
                 install_ccs_dependency:
                   default: false
@@ -115,18 +115,11 @@ spec:
                     enable_gfs:
                       type: boolean
                       description: Whether GFS is enabled.
-                    additionalDnsNames:
-                      type: array
-                      description: Additional DNS names to include in the GFS mTLS certificate.
-                      items:
-                        type: string
-                enable_opensearch:
-                  type: boolean
                 enable_watsonx_platform:
                   default: false
                   type: boolean
                 enable_api_v2:
-                  default: false
+                  default: true
                   type: boolean
                 generate_network_policies:
                   type: boolean
@@ -134,28 +127,22 @@ spec:
                   type: object
                   description: Configuration for deployment modes.
                   default:
-                    wxd_standard: true
-                    wxd_lite_spark_enabled: false
+                    standard: true
+                    spark_lite: false
                     mds_standalone: false
                   properties:
-                    wxd_standard:
+                    standard:
                       type: boolean
                       default: true
                       description: Enable standard deployment mode with all components.
-                    wxd_lite_spark_enabled:
+                    spark_lite:
                       type: boolean
                       default: false
-                      description: Enable spark (Analytics Engine) lite mode with minimal components.
+                      description: Enable Spark lite mode with minimal components.
                     mds_standalone:
                       type: boolean
                       default: false
                       description: Enable MDS standalone mode with minimal components.
-                    spark_lite:
-                      type: boolean
-                      description: Deprecated - use wxd_lite_spark_enabled instead. Will be migrated automatically.
-                    standard:
-                      type: boolean
-                      description: Deprecated - use wxd_standard instead. Will be migrated automatically.
               required:
                 - license
                 - version

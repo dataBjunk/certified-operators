@@ -75,7 +75,7 @@ spec:
                     - license
                   type: object
                 version:
-                  default: 2.3.1
+                  default: 2.3.0
                   type: string
                 enable_cpg:
                   type: boolean
@@ -88,12 +88,6 @@ spec:
                 update_configuration:
                   default: false
                   type: boolean
-                guardium_enabled:
-                  type: boolean
-                guardium_event_kafka_topic:
-                  type: string
-                kafka_brokers:
-                  type: string
                 otel_configuration:
                   type: object
                   default: {}

@@ -12,8 +12,8 @@ annotations:
   operators.operatorframework.io.bundle.manifests.v1: manifests/
   operators.operatorframework.io.bundle.metadata.v1: metadata/
   operators.operatorframework.io.bundle.package.v1: ibm-lakehouse-operator
-  operators.operatorframework.io.bundle.channels.v1: v6.1
-  operators.operatorframework.io.bundle.channel.default.v1: v6.1
+  operators.operatorframework.io.bundle.channels.v1: v6.0
+  operators.operatorframework.io.bundle.channel.default.v1: v6.0
   operators.operatorframework.io.metrics.builder: operator-sdk-v1.28.1
   operators.operatorframework.io.metrics.mediatype.v1: metrics+v1
   operators.operatorframework.io.metrics.project_layout: ansible.sdk.operatorframework.io/v1
@@ -24,5 +24,18 @@ annotations:
 
   # Red Hat certification annotations
   com.redhat.openshift.versions: "v4.12-v4.16"
+  operators.operatorframework.io/operator-type: "non-standalone"
+  
+  # Red Hat delivery annotations
   com.redhat.delivery.operator.bundle: "true"
   com.redhat.delivery.backport: "false"
+  
+  # Infrastructure features
+  operators.openshift.io/infrastructure-features: '["disconnected"]'
+  
+  # Support and documentation
+  repository: https://github.com/IBM/ibm-open-lakehouse-operator
+  support: IBM
+  
+  # Container image
+  containerImage: icr.io/cpopen/ibm-lakehouse-operator:6.0.0

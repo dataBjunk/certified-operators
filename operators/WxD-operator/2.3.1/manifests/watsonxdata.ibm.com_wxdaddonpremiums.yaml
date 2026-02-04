@@ -72,7 +72,7 @@ spec:
                     - license
                   type: object
                 version:
-                  default: 2.3.1
+                  default: 2.3.0
                   type: string
                 install_ccs_dependency:
                   default: false

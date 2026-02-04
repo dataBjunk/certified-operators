@@ -18,11 +18,17 @@ metadata:
     description: IBM watsonx.data operator
     operators.operatorframework.io/internal-objects: '["wxdaddons.watsonxdata.ibm.com","wxdengines.watsonxdata.ibm.com","wxds.watsonxdata.ibm.com"]'
     operators.operatorframework.io/operator-type: "non-standalone"
+    
     # Red Hat certification annotations
-    categories: "Database,AI/Machine Learning,Big Data"
-    certified: "false"
+    com.redhat.openshift.versions: "v4.12-v4.16"
+    certified: "true"
     repository: https://github.com/IBM/ibm-open-lakehouse-operator
     support: IBM
+    
+    # Operator capabilities
+    capabilities: Seamless Upgrades
+    categories: "Database,AI/Machine Learning"
+    
     alm-examples: |-
       [
         {
@@ -42,7 +48,7 @@ metadata:
             "blockStorageClass": "standard",
             "description": "IBM Lakehouse",
             "shutdown": "false",
-            "version": "2.3.1",
+            "version": "2.3.0",
             "license": {
               "accept": false
             }
@@ -85,7 +91,7 @@ metadata:
               "accept": false
             }
           }
-        },
+        },        
         {
           "apiVersion": "watsonxdata.ibm.com/v1",
           "kind": "WxdEngine",
@@ -113,18 +119,14 @@ metadata:
           }
         }
       ]
-    capabilities: Seamless Upgrades
     createdAt: "2023-05-12T21:57:48Z"
     operators.operatorframework.io/builder: operator-sdk-v1.28.1
     operators.operatorframework.io/project_layout: ansible.sdk.operatorframework.io/v1
     nss.operator.ibm.com/managed-operators: ibm-lakehouse
-    containerImage: icr.io/cpopen/ibm-lakehouse-operator@sha256:1e6b4a6bbbf24b9813c60400e652eeee34d9304975e1f67765f545dd47210132
-    olm.skipRange: ">=1.0.0 <6.1.0"
-    operators.openshift.io/infrastructure-features: '["Disconnected"]'
-    # Red Hat OpenShift version compatibility
-    com.redhat.openshift.versions: "v4.12-v4.16"
-    operatorframework.io/suggested-namespace: watsonxdata
-  name: ibm-lakehouse-operator.v6.1.0
+    containerImage: icr.io/cpopen/ibm-lakehouse-operator@sha256:87142f4712f4d3f9158dce653f5edd02c6bc36a883aee59fa880bb40e163a4e0
+    olm.skipRange: ">=1.0.0 <6.0.0"
+    operators.openshift.io/infrastructure-features: '["disconnected"]'
+  name: ibm-lakehouse-operator.v6.0.0
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -134,7 +136,7 @@ spec:
       - description: |-
           This is the CRD for IBM watsonx.data control plane.
           License
-          You must read and accept the license terms to install the software(https://ibm.biz/BdpdBF).
+          You must read and accept the license terms to install the software(https://ibm.biz/BdbaLT).
         kind: WxdAddon
         name: wxdaddons.watsonxdata.ibm.com
         version: v1
@@ -143,7 +145,7 @@ spec:
             path: license
             description: You must read and accept the license terms to install the software.
           - displayName: License type
-            description: "Select the license that you purchased.\nLicense agreement https://ibm.biz/BdpdBF must be accepted during install of this product (required)."
+            description: "Select the license that you purchased.\nLicense agreement https://ibm.biz/BdbaLT must be accepted during install of this product (required)."
             path: license.license
             x-descriptors:
               - urn:alm:descriptor:com.tectonic.ui:select:Enterprise
@@ -156,7 +158,7 @@ spec:
       - description: |-
           This is the CRD for IBM watsonx.data control plane.
           License
-          You must read and accept the license terms to install the software(https://ibm.biz/BdpdcU).
+          You must read and accept the license terms to install the software(https://ibm.biz/BdbaAM).
         kind: WxdAddonPremium
         name: wxdaddonpremiums.watsonxdata.ibm.com
         version: v1
@@ -165,7 +167,7 @@ spec:
             path: license
             description: You must read and accept the license terms to install the software.
           - displayName: License type
-            description: "Select the license that you purchased.\nLicense agreement https://ibm.biz/BdpdcU must be accepted during install of this product (required)."
+            description: "Select the license that you purchased.\nLicense agreement https://ibm.biz/BdbaAM must be accepted during install of this product (required)."
             path: license.license
             x-descriptors:
               - urn:alm:descriptor:com.tectonic.ui:select:Enterprise
@@ -178,7 +180,7 @@ spec:
       - description: |-
           This is the CRD for IBM watsonx.data engines.
           License
-          You must read and accept the license terms to install the software(https://ibm.biz/BdpdBF).
+          You must read and accept the license terms to install the software(https://ibm.biz/BdbaLT).
         kind: WxdEngine
         name: wxdengines.watsonxdata.ibm.com
         version: v1
@@ -189,7 +191,7 @@ spec:
       - description: |-
           This is the CRD for IBM watsonx.data instances.
           License
-          You must read and accept the license terms to install the software(https://ibm.biz/BdpdBF).
+          You must read and accept the license terms to install the software(https://ibm.biz/BdbaLT).
         kind: Wxd
         name: wxds.watsonxdata.ibm.com
         version: v1
@@ -201,17 +203,17 @@ spec:
   description: |
     IBM&reg; watsonx.data is a new open architecture that combines the elements of the data warehouse and data lake models. The best-in-class features and optimizations available on the watsonx.data make it an optimal choice for next generation data analytics and automation.
 
-    # Name
-    IBM&reg; IBM watsonx.data
+    # Name 
+    IBM&reg; IBM watsonx.data 
 
     # Details
-    watsonx.data is a unique solution that allows co-existence of open source technologies and proprietary products.
-    It offers a single platform where you can store the data or attach data sources for managing and analyzing your enterprise data.
-    Use watsonx.data to store any type of data (structured, semi-structured, and unstructured) and
-    make that data accessible directly for Artificial Intelligence (AI) and Business Intelligence (BI).
-    You can also attach your data sources to watsonx.data, which helps to reduce data duplication and cost of storing data in multiple places.
-    It uses open data formats with APIs and machine learning libraries, making it easier for data scientists and data engineers to use the data.
-    watsonx.data architecture enforces schema and data integrity, making it easier to implement robust data security and governance mechanisms.
+    watsonx.data is a unique solution that allows co-existence of open source technologies and proprietary products. 
+    It offers a single platform where you can store the data or attach data sources for managing and analyzing your enterprise data. 
+    Use watsonx.data to store any type of data (structured, semi-structured, and unstructured) and 
+    make that data accessible directly for Artificial Intelligence (AI) and Business Intelligence (BI). 
+    You can also attach your data sources to watsonx.data, which helps to reduce data duplication and cost of storing data in multiple places. 
+    It uses open data formats with APIs and machine learning libraries, making it easier for data scientists and data engineers to use the data. 
+    watsonx.data architecture enforces schema and data integrity, making it easier to implement robust data security and governance mechanisms. 
 
     ## Prerequisites
     1. To install watsonx.data, you must have a client workstation that can connect to the Red Hat&reg; OpenShift&reg; Container Platform cluster.
@@ -226,15 +228,15 @@ spec:
     Various Resources Required
 
     ## Installing
-    For instructions to install IBM&reg; watsonx.data 2.3.1, contact your local sales representative.
+    For instructions to install IBM&reg; watsonx.data 2.3.0, contact your local sales representative.
     One of our technical team members will guide you through the installation process.
 
     ## Configuration
       N/A
     ### Limitations
-    1. When dealing with character data, case sensitivity can be important when searching for specific matches or patterns.
-    However, not all databases and query engines behave in the same way.
-    Some are case insensitive by default, while others are not.
+    1. When dealing with character data, case sensitivity can be important when searching for specific matches or patterns. 
+    However, not all databases and query engines behave in the same way. 
+    Some are case insensitive by default, while others are not. 
     This can lead to unexpected results if the case of the data is not taken into account.
 
     ### SecurityContextConstraints Requirements
@@ -274,7 +276,7 @@ spec:
                   productID: 9e2a4571085f42f8af674f707fab0b75
                   productMetric: FREE
                   productName: IBM watsonx.data
-                  productVersion: 6.1.0
+                  productVersion: 6.0.0
                 labels:
                   app.kubernetes.io/component: ibm-lakehouse
                   app.kubernetes.io/instance: ibm-lakehouse
@@ -354,7 +356,7 @@ spec:
                         value: "3"
                       - name: ANSIBLE_FORKS
                         value: "5"
-                    image: icr.io/cpopen/ibm-lakehouse-operator@sha256:1e6b4a6bbbf24b9813c60400e652eeee34d9304975e1f67765f545dd47210132
+                    image: icr.io/cpopen/ibm-lakehouse-operator@sha256:87142f4712f4d3f9158dce653f5edd02c6bc36a883aee59fa880bb40e163a4e0
                     livenessProbe:
                       httpGet:
                         path: /healthz
@@ -1226,31 +1228,31 @@ spec:
                 - update
                 - watch
             - apiGroups:
-                - missioncontrol.datastax.com
+              - missioncontrol.datastax.com
               resources:
-                - missioncontrolclusters
+              - missioncontrolclusters
               verbs:
-                - create
-                - delete
-                - get
-                - list
-                - patch
-                - update
-                - watch
+              - create
+              - delete
+              - get
+              - list
+              - patch
+              - update
+              - watch
             - apiGroups:
-                - missioncontrol.datastax.com
+              - missioncontrol.datastax.com
               resources:
-                - missioncontrolclusters/finalizers
+              - missioncontrolclusters/finalizers
               verbs:
-                - update
+              - update
             - apiGroups:
-                - missioncontrol.datastax.com
+              - missioncontrol.datastax.com
               resources:
-                - missioncontrolclusters/status
+              - missioncontrolclusters/status
               verbs:
-                - get
-                - patch
-                - update
+              - get
+              - patch
+              - update
           serviceAccountName: ibm-lakehouse-operator-sa
     strategy: deployment
   installModes:
@@ -1266,21 +1268,24 @@ spec:
     - database
     - hive
     - prestodb
-    - watsonx
     - lakehouse
-    - data warehouse
     - analytics
+    - watsonx
   links:
     - name: IBM watsonx.data
       url: https://www.ibm.com/products/watsonx-data
     - name: Documentation
-      url: https://www.ibm.com/docs/en/watsonxdata
-    - name: Source Code
+      url: https://www.ibm.com/docs/en/watsonx/watsonxdata
+    - name: GitHub Repository
       url: https://github.com/IBM/ibm-open-lakehouse-operator
   maintainers:
     - name: IBM watsonx.data Team
-      email: watsonxdata@ibm.com
+      email: watsonx-data-support@ibm.com
   maturity: stable
   provider:
     name: IBM
-  version: 6.1.0
+    url: https://www.ibm.com
+  relatedImages:
+    - name: ibm-lakehouse-operator
+      image: icr.io/cpopen/ibm-lakehouse-operator@sha256:87142f4712f4d3f9158dce653f5edd02c6bc36a883aee59fa880bb40e163a4e0
+  version: 6.0.0
